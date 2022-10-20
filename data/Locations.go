@@ -19,10 +19,6 @@ type Location struct {
 	Id   int     `json:"id"`
 }
 
-func (o Ort) New() {
-	o = Ort{IsEmpty: true}
-}
-
 func (o Ort) ReadJson(body *[]byte) *Ort {
 	res := &[]Location{}
 	err := json.Unmarshal(*body, res)

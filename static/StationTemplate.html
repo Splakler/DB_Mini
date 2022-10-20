@@ -1,5 +1,6 @@
 <html>
 <head>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div>
@@ -12,12 +13,24 @@
 </div>
 <div>
     <img src="{{.ImgUrl}}" alt="{{.Name}}">
-    <h1> Information on <b>{{.Name}}</b>:</h1>
+    <div class="DbDiv">
+        <div class="DbBox">
+            <h1 class="DbText"> Information on "<b>{{.Name}}</b>": </h1>
+            {{if .IsOpen}}
+            <b class="open">OPEN</b>
+            {{else}}
+            <b class="closed">CLOSED</b>
+            {{end}}
+            <h3 class="DbText"> {{with .MailingAddress}}
+                {{.Street}}, {{.Zipcode}} {{.City}}
+                {{end}}</h3>
+        </div>
     <ul>
         <li>
 
         </li>
     </ul>
+    </div>
 </div>
 </body>
 </html>

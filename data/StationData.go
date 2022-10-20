@@ -10,6 +10,7 @@ import (
 )
 
 type StaDa struct {
+	Search   string
 	Total    int       `json:"total"`
 	Stations []Station `json:"result"`
 }
@@ -58,7 +59,7 @@ func (s StaDa) NewStation() *StaDa {
 	return &StaDa{}
 }
 
-func (s StaDa) FetchEverything() *StaDa {
+func FetchEverything() *StaDa {
 	var res StaDa
 	return res.ReadJson(*ReqStaDaAll())
 }
@@ -75,7 +76,7 @@ func (s StaDa) ReadJson(body []byte) *StaDa {
 func (s StaDa) SearchForName(search string) *[]Station {
 	var res []Station = nil
 	for _, elem := range s.Stations {
-		if strings.Contains(elem.Name, search) {
+		if strings.Contains(strings.ToUpper(elem.Name), strings.ToUpper(search)) {
 			res = append(res, elem)
 		}
 	}
@@ -115,4 +116,16 @@ func (stat Station) HasOpen() bool {
 
 func (s Station) GetImageUrl() (*url.URL, error) {
 	return url.Parse("https://api.railway-stations.org/photos/de/" + strconv.Itoa(s.Num) + "_1.jpg")
+}
+
+func (s Station) ExtractMainEva() int {
+	if s.EvaNumbers == nil {
+		return 0
+	}
+	for _, Elem := range s.EvaNumbers {
+		if Elem.IsMain {
+			return Elem.Eva
+		}
+	}
+	return 0
 }

@@ -9,17 +9,21 @@ import (
 	"net/url"
 	"os"
 	"strconv"
+	"time"
 )
 
-func runServer() {
-	var Data data.StaDa
+func startServ() {
 	port := "8080"
 	fileServer := http.FileServer(http.Dir("./static"))
-	Data = *Data.FetchEverything()
+	fmt.Println("Downloading Data... Please stand by...")
+	t := time.Now()
+	Data := data.FetchEverything()
+	fmt.Println("Finished Fetching Data. Took:", time.Now().Sub(t))
 	http.Handle("/", fileServer)
-	http.HandleFunc("/Search", SearchHandler(&Data))
+	http.HandleFunc("/Search", SearchHandler(Data))
 	http.HandleFunc("/hello", helloHandler)
-	http.HandleFunc("/Station", StationHandler(&Data))
+	http.HandleFunc("/Station", StationHandler(Data))
+	fmt.Println("Server Started!")
 	if err := http.ListenAndServe(":"+port, nil); err != nil {
 		log.Fatal(err)
 	}
@@ -46,6 +50,7 @@ func SearchHandler(Data *data.StaDa) http.HandlerFunc {
 
 		var res data.StaDa
 		res.Stations = *Data.SearchForName(name)
+		res.Search = name
 
 		err := tmpl.Execute(w, res)
 		data.CatchError(err, "template.Execute Error!")

@@ -11,6 +11,7 @@ const DBApisUrl = "https://apis.deutschebahn.com/db-api-marketplace/apis/"
 const StationDataUrl = DBApisUrl + "station-data/v2/stations/"
 const FahrplanUrl = DBApisUrl + "fahrplan/v1/"
 const StaDaUrl = DBApisUrl + "station-data/v2/stations"
+const ArrivalUrl = DBApisUrl
 
 var Cid = ""
 var ApiKey = ""
