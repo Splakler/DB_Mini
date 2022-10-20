@@ -11,22 +11,13 @@
     </form>
 </div>
 <div>
-    {{if .IsEmpty}}
-    <h2>No Results found for {{.Search}}</h2>
-    {{else}}
-    <h2>Results:</h2>
-    {{end}}
+    <img src="{{.ImgUrl}}" alt="{{.Name}}">
+    <h1> Information on <b>{{.Name}}</b>:</h1>
+    <ul>
+        <li>
 
-        <ul>
-            {{range .Locations}}
-            <li>
-                <form method="POST" action="/Station?q={{.Id}}">
-                <input name="station" type="submit" value={{.Name}}>
-                </form>
-            </li>
-            {{end}}
-        </ul>
-
+        </li>
+    </ul>
 </div>
 </body>
 </html>
