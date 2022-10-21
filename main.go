@@ -1,8 +1,8 @@
 package main
 
-import "DB_Mini/data"
+import "DB_Mini/apiData"
 
 func main() {
-	data.ReqKeys()
+	apiData.ReqKeys()
 	startServ()
 }

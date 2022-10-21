@@ -1,4 +1,4 @@
-package data
+package apiData
 
 import (
 	"encoding/json"
@@ -118,7 +118,7 @@ func (s Station) GetImageUrl() (*url.URL, error) {
 	return url.Parse("https://api.railway-stations.org/photos/de/" + strconv.Itoa(s.Num) + "_1.jpg")
 }
 
-func (s Station) ExtractMainEva() int {
+func (s Station) GetMainEva() int {
 	if s.EvaNumbers == nil {
 		return 0
 	}

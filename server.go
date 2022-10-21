@@ -1,7 +1,7 @@
 package main
 
 import (
-	"DB_Mini/data"
+	"DB_Mini/apiData"
 	"fmt"
 	"html/template"
 	"log"
@@ -12,17 +12,22 @@ import (
 	"time"
 )
 
+type Client struct {
+	StationInfos apiData.Station
+	Arrvials     apiData.ArrivalData
+	Departures   apiData.DepartureData
+}
+
 func startServ() {
 	port := "8080"
 	fileServer := http.FileServer(http.Dir("./static"))
-	fmt.Println("Downloading Data... Please stand by...")
+	fmt.Println("Downloading data... Please stand by...")
 	t := time.Now()
-	Data := data.FetchEverything()
-	fmt.Println("Finished Fetching Data. Took:", time.Now().Sub(t))
+	stationsList := apiData.FetchEverything()
+	fmt.Println("Finished Fetching data. Took:", time.Now().Sub(t))
 	http.Handle("/", fileServer)
-	http.HandleFunc("/Search", SearchHandler(Data))
-	http.HandleFunc("/hello", helloHandler)
-	http.HandleFunc("/Station", StationHandler(Data))
+	http.HandleFunc("/Search", SearchHandler(stationsList))
+	http.HandleFunc("/Station", StationHandler(stationsList))
 	fmt.Println("Server Started!")
 	if err := http.ListenAndServe(":"+port, nil); err != nil {
 		log.Fatal(err)
@@ -30,11 +35,7 @@ func startServ() {
 
 }
 
-func helloHandler(writer http.ResponseWriter, request *http.Request) {
-	url.Parse("/form.html")
-}
-
-func SearchHandler(Data *data.StaDa) http.HandlerFunc {
+func SearchHandler(stationsList *apiData.StaDa) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if err := r.ParseForm(); err != nil {
 			fmt.Fprintf(w, "ParseForm() err: %v", err)
@@ -45,21 +46,19 @@ func SearchHandler(Data *data.StaDa) http.HandlerFunc {
 
 		fmt.Fprintf(os.Stdout, "POST request successful\n")
 		name := r.FormValue("name")
-		//address := r.FormValue("address")
-		//specs := r.FormValue("specs")
 
-		var res data.StaDa
-		res.Stations = *Data.SearchForName(name)
+		var res apiData.StaDa
+		res.Stations = *stationsList.SearchForName(name)
 		res.Search = name
 
 		err := tmpl.Execute(w, res)
-		data.CatchError(err, "template.Execute Error!")
+		apiData.CatchError(err, "template.Execute Error!")
 
 		fmt.Println(res.Stations)
 	}
 }
 
-func StationHandler(Data *data.StaDa) http.HandlerFunc {
+func StationHandler(stationsList *apiData.StaDa) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		u, err := url.Parse(r.URL.String())
 		if err != nil {
@@ -68,19 +67,20 @@ func StationHandler(Data *data.StaDa) http.HandlerFunc {
 		}
 		params := u.Query()
 		searchQuery, _ := strconv.Atoi(params.Get("q"))
-		//
-
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		tmpl := template.Must(template.ParseFiles("./static/StationTemplate.html"))
 
 		fmt.Fprintf(os.Stdout, "STATION-POST request successful\n")
-		var res data.Station
-		res = *Data.SearchFoNum(searchQuery)
-		res.IsOpen = res.HasOpen()
-		res.ImgUrl, _ = res.GetImageUrl()
+
+		var res Client
+		res.StationInfos = *stationsList.SearchFoNum(searchQuery)
+		res.StationInfos.IsOpen = res.StationInfos.HasOpen()
+		res.StationInfos.ImgUrl, _ = res.StationInfos.GetImageUrl()
+		res.Arrvials.GetArrivalsFor(res.StationInfos.GetMainEva())
+		res.Departures.GetDeparturesFor(res.StationInfos.GetMainEva())
 
 		err = tmpl.Execute(w, res)
-		data.CatchError(err, "template.Execute Error!")
+		apiData.CatchError(err, "template.Execute Error!")
 
 		fmt.Println(res)
 	}
