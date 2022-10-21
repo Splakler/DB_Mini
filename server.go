@@ -14,7 +14,7 @@ import (
 
 type Client struct {
 	StationInfos apiData.Station
-	Arrvials     apiData.ArrivalData
+	Arrivals     apiData.ArrivalData
 	Departures   apiData.DepartureData
 }
 
@@ -76,7 +76,7 @@ func StationHandler(stationsList *apiData.StaDa) http.HandlerFunc {
 		res.StationInfos = *stationsList.SearchFoNum(searchQuery)
 		res.StationInfos.IsOpen = res.StationInfos.HasOpen()
 		res.StationInfos.ImgUrl, _ = res.StationInfos.GetImageUrl()
-		res.Arrvials.GetArrivalsFor(res.StationInfos.GetMainEva())
+		res.Arrivals.GetArrivalsFor(res.StationInfos.GetMainEva())
 		res.Departures.GetDeparturesFor(res.StationInfos.GetMainEva())
 
 		err = tmpl.Execute(w, res)

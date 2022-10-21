@@ -7,24 +7,20 @@ import (
 	"time"
 )
 
-type ArrivalData struct {
-	Arrivals []struct {
-		Name      string `json:"name"`
-		DateTime  string `json:"date_time"`
-		Origin    string `json:"origin"`
-		Track     string `json:"track"`
-		DetailsId string `json:"details_id"`
-	}
+type ArrivalData []struct {
+	Name      string `json:"name"`
+	DateTime  string `json:"date_time"`
+	Origin    string `json:"origin"`
+	Track     string `json:"track"`
+	DetailsId string `json:"details_id"`
 }
 
-type DepartureData struct {
-	Departures []struct {
-		Name      string `json:"name"`
-		DateTime  string `json:"date_time"`
-		Direction string `json:"direction"`
-		Track     string `json:"track"`
-		DetailsId string `json:"detailsId"`
-	}
+type DepartureData []struct {
+	Name      string `json:"name"`
+	DateTime  string `json:"date_time"`
+	Direction string `json:"direction"`
+	Track     string `json:"track"`
+	DetailsId string `json:"detailsId"`
 }
 
 type JourneyData struct {
@@ -39,7 +35,7 @@ type JourneyData struct {
 }
 
 func (a ArrivalData) GetArrivalsFor(eva int) {
-	a = *a.ReadJson(*ReqFahrplanArr(eva, getDateFromTime(time.Now())))
+	a = *ArrivalData{}.ReadJson(*ReqFahrplanArr(eva, getDateFromTime(time.Now())))
 }
 
 func (a ArrivalData) ReadJson(body []byte) *ArrivalData {

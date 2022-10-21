@@ -13,6 +13,7 @@
     </div>
 </div>
 <div class="page">
+    {{with .StationInfos}}
     <img src="{{.ImgUrl}}" alt="{{.Name}}" class="headerImg">
     <div class="DbDiv">
         <div class="DbBox">
@@ -26,10 +27,13 @@
                 {{.Street}}, {{.Zipcode}} {{.City}}
                 {{end}}</h3>
         </div>
+        {{end}}
     <ul>
+        {{range .Arrivals}}
         <li>
-
+            <b>{{.Name}}</b><a>on Track {{.Track}}</a>
         </li>
+        {{end}}
     </ul>
     </div>
 </div>
