@@ -1,4 +1,4 @@
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="style.css">
@@ -16,7 +16,8 @@
     {{with .StationInfos}}
     <img src="{{.ImgUrl}}" alt="{{.Name}}" class="headerImg">
     <div class="DbDiv">
-        <div class="DbBox">
+        <div class="DbStripe"></div>
+        <div class="DbBox" style="margin-top: -7px">
             <h1 class="DbText"> Information on "<b>{{.Name}}</b>": </h1>
             {{if .IsOpen}}
             <b class="open">OPEN</b>
@@ -28,13 +29,46 @@
                 {{end}}</h3>
         </div>
         {{end}}
-    <ul>
-        {{range .Arrivals}}
-        <li>
-            <b>{{.Name}}</b><a>on Track {{.Track}}</a>
-        </li>
-        {{end}}
-    </ul>
+    </div>
+    <div class="DbDiv">
+        <div style="margin-top: 30px"> </div>
+        <b class="DbHeader">Arrivals</b>
+        <table class="trainTable" style="margin-top: 10px">
+            <tr>
+                <th style="width: 10%">Train</th>
+                <th style="width: 40%">Origin</th>
+                <th style="width: 20%">Track</th>
+                <th style="width: 30%">Time</th>
+            </tr>
+            {{range .Arrivals}}
+            <tr>
+                <td>{{.Name}}</td>
+                <td>{{.Origin}}</td>
+                <td>{{.Track}}</td>
+                <td>{{.DateTime}}</td>
+            </tr>
+            {{end}}
+        </table>
+    </div>
+    <div class="DbDiv">
+        <div style="margin-top: 30px"></div>
+        <b class="DbHeader" style="margin-top: -7px">Departures</b>
+        <table class="trainTable" style="margin-top: 10px">
+            <tr>
+                <th style="width: 10%">Train</th>
+                <th style="width: 40%">Destination</th>
+                <th style="width: 20%">Track</th>
+                <th style="width: 30%">Time</th>
+            </tr>
+            {{range .Departures}}
+                <tr>
+                    <td><a href="/Journey?q={{.DetailsId}}">{{.Name}}</a></td>
+                    <td><a href="/Search?q={{.Direction}}">{{.Direction}}</a></td>
+                    <td><a>{{.Track}}</a></td>
+                    <td><a>{{.DateTime}}</a></td>
+                </tr>
+            {{end}}
+        </table>
     </div>
 </div>
 </body>

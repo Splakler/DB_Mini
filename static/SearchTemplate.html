@@ -3,10 +3,8 @@
 </head>
 <body>
 <div>
-    <form method="POST" action="/Search">
+    <form method="POST" action="/Search?q={{.Search}}">
         <label>Name</label><input name="name" type="text" value="{{.Search}}" />
-        <label>Address</label><input name="address" type="text" value="" />
-        <label>Specs</label><input name="specs" type="text" value="" />
         <input type="submit" value="submit" />
     </form>
 </div>

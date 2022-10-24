@@ -8,7 +8,6 @@ body{
 }
 
 .page{
-
     box-shadow: black;
 }
 
@@ -20,9 +19,22 @@ body{
 }
 
 .DbDiv {
+
+}
+
+.DbStripe {
     background-color: #c1121c;
     height: 7px;
     margin-top: 5px;
+    border-radius: 7px;
+}
+
+.DbHeader {
+    background-color: #c1121c;
+    color: white;
+    font-family: Helvetica;
+    padding: 10px 20px 10px 20px;
+    width: max-content;
     border-radius: 7px;
 }
 
@@ -87,4 +99,47 @@ body{
 
 .topnav .search-container button:hover {
     background: #ccc;
+}
+
+.trainTable {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 75%;
+}
+
+.trainTable td, .trainTable th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.trainTable tr:nth-child(even){background-color: #f2f2f2;}
+
+.trainTable tr:hover {background-color: #ddd;}
+
+.trainTable th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #c1121c;
+    color: white;
+}
+
+a:link {
+    color: black;
+    text-decoration: none;
+}
+
+a:visited {
+    color: black;
+    text-decoration: none;
+}
+
+a:hover {
+    color: black;
+    text-decoration: underline;
+}
+
+a:active {
+    color: black;
+    text-decoration: underline;
 }

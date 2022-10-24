@@ -37,6 +37,14 @@ func startServ() {
 
 func SearchHandler(stationsList *apiData.StaDa) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		u, err := url.Parse(r.URL.String())
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		params := u.Query()
+		searchQuery := params.Get("q")
+
 		if err := r.ParseForm(); err != nil {
 			fmt.Fprintf(w, "ParseForm() err: %v", err)
 			return
@@ -48,10 +56,15 @@ func SearchHandler(stationsList *apiData.StaDa) http.HandlerFunc {
 		name := r.FormValue("name")
 
 		var res apiData.StaDa
-		res.Stations = *stationsList.SearchForName(name)
-		res.Search = name
+		if name == "" {
+			res.Stations = *stationsList.SearchForName(searchQuery)
+			res.Search = searchQuery
+		} else {
+			res.Stations = *stationsList.SearchForName(name)
+			res.Search = name
+		}
 
-		err := tmpl.Execute(w, res)
+		err = tmpl.Execute(w, res)
 		apiData.CatchError(err, "template.Execute Error!")
 
 		fmt.Println(res.Stations)
@@ -76,8 +89,8 @@ func StationHandler(stationsList *apiData.StaDa) http.HandlerFunc {
 		res.StationInfos = *stationsList.SearchFoNum(searchQuery)
 		res.StationInfos.IsOpen = res.StationInfos.HasOpen()
 		res.StationInfos.ImgUrl, _ = res.StationInfos.GetImageUrl()
-		res.Arrivals.GetArrivalsFor(res.StationInfos.GetMainEva())
-		res.Departures.GetDeparturesFor(res.StationInfos.GetMainEva())
+		res.Arrivals = *apiData.GetArrivalsFor(res.StationInfos.GetMainEva())
+		res.Departures = *apiData.GetDeparturesFor(res.StationInfos.GetMainEva())
 
 		err = tmpl.Execute(w, res)
 		apiData.CatchError(err, "template.Execute Error!")
