@@ -28,6 +28,7 @@ func startServ() {
 	http.Handle("/", fileServer)
 	http.HandleFunc("/Search", SearchHandler(stationsList))
 	http.HandleFunc("/Station", StationHandler(stationsList))
+	http.HandleFunc("/Journey", JourneyHandler(stationsList))
 	fmt.Println("Server Started!")
 	if err := http.ListenAndServe(":"+port, nil); err != nil {
 		log.Fatal(err)
@@ -91,6 +92,30 @@ func StationHandler(stationsList *apiData.StaDa) http.HandlerFunc {
 		res.StationInfos.ImgUrl, _ = res.StationInfos.GetImageUrl()
 		res.Arrivals = *apiData.GetArrivalsFor(res.StationInfos.GetMainEva())
 		res.Departures = *apiData.GetDeparturesFor(res.StationInfos.GetMainEva())
+
+		err = tmpl.Execute(w, res)
+		apiData.CatchError(err, "template.Execute Error!")
+
+		fmt.Println(res)
+	}
+}
+
+func JourneyHandler(stationsList *apiData.StaDa) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		u, err := url.Parse(r.URL.String())
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		params := u.Query()
+		searchQuery := params.Get("q")
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		tmpl := template.Must(template.ParseFiles("./static/JourneyTemplate.html"))
+
+		fmt.Fprintf(os.Stdout, "JOURNEY-POST request successful\n")
+
+		var res apiData.JourneyData
+		res = *apiData.GetJourneyDetailsFor(searchQuery)
 
 		err = tmpl.Execute(w, res)
 		apiData.CatchError(err, "template.Execute Error!")

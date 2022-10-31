@@ -25,13 +25,15 @@ type DepartureData []struct {
 
 type JourneyData struct {
 	TrainName string
-	Stops     []struct {
-		Train    string `json:"train"`
-		StopName string `json:"stop_name"`
-		StopId   int    `json:"stop_id"`
-		DepTime  string `json:"dep_time"`
-		ArrTime  string `json:"arr_time"`
-	}
+	Stops     Stop
+}
+
+type Stop []struct {
+	Train    string `json:"train"`
+	StopName string `json:"stopName"`
+	StopId   int    `json:"stopId"`
+	DepTime  string `json:"depTime"`
+	ArrTime  string `json:"arrTime"`
 }
 
 func GetArrivalsFor(eva int) *ArrivalData {
@@ -60,17 +62,35 @@ func (d DepartureData) ReadJson(body []byte) *DepartureData {
 	return res
 }
 
-func (j JourneyData) GetJourneyDetailsFor(jId string) {
-	j = *j.ReadJson(*ReqFahrplanJourney(jId))
+func GetJourneyDetailsFor(jId string) *JourneyData {
+	var stops Stop
+	var res JourneyData
+	stops = *stops.ReadJson(*ReqFahrplanJourney(jId))
+	res.Stops = stops
+	if stops != nil {
+		res.TrainName = stops[0].Train
+	}
+	res = *CleanJourneyData(res)
+	return &res
 }
 
-func (j JourneyData) ReadJson(body []byte) *JourneyData {
-	res := &JourneyData{}
+func (j Stop) ReadJson(body []byte) *Stop {
+	res := &Stop{}
 	err := json.Unmarshal(body, res)
 	if err != nil {
 		log.Println("Error in ReadJson\n", err)
 	}
 	return res
+}
+
+func CleanJourneyData(j JourneyData) *JourneyData {
+	for idx, element := range j.Stops {
+		element.StopName = strings.Replace(element.StopName, "&#x0028;", " (", -1)
+		element.StopName = strings.Replace(element.StopName, "&#x0029;", ") ", -1)
+		element.StopName = strings.Replace(element.StopName, "  ", " ", -1)
+		j.Stops[idx] = element
+	}
+	return &j
 }
 
 func getDateFromTime(t time.Time) string {

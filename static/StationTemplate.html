@@ -42,8 +42,8 @@
             </tr>
             {{range .Arrivals}}
             <tr>
-                <td>{{.Name}}</td>
-                <td>{{.Origin}}</td>
+                <td><a href="/Journey?q={{.DetailsId}}">{{.Name}}</a></td>
+                <td><a href="/Search?q={{.Origin}}">{{.Origin}}</a></td>
                 <td>{{.Track}}</td>
                 <td>{{.DateTime}}</td>
             </tr>

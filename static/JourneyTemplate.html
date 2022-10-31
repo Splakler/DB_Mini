@@ -1,0 +1,41 @@
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="topnav">
+  <div class="search-container">
+    <form method="POST" action="/Search">
+      <input name="name" type="text" placeholder="Search.." />
+      <button type="submit"><i class="fa fa-fw fa-search"></i></button>
+    </form>
+  </div>
+</div>
+<div class="page">
+  <div class="DbDiv">
+    <div class="DbStripe"></div>
+    <div class="DbBox" style="margin-top: -7px">
+      <h1 class="DbText"> Information on "<b>{{.TrainName}}</b>": </h1>
+    </div>
+  </div>
+  <div class="DbDiv">
+    <div style="margin-top: 30px"> </div>
+    <table class="trainTable" style="margin-top: 10px">
+      <tr>
+        <th style="width: 10%">Stop</th>
+        <th style="width: 40%">Arrival</th>
+        <th style="width: 20%">Departure</th>
+      </tr>
+      {{range .Stops}}
+      <tr>
+        <td><a href="/Search?q={{.StopName}}">{{.StopName}}</a></td>
+        <td>{{.ArrTime}}</td>
+        <td>{{.DepTime}}</td>
+      </tr>
+      {{end}}
+    </table>
+  </div>
+</div>
+</body>
+</html>
