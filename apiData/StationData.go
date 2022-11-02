@@ -73,13 +73,17 @@ func (s StaDa) ReadJson(body []byte) *StaDa {
 	return res
 }
 
-func (s StaDa) SearchForName(search string) *[]Station {
-	var res []Station = nil
+func (s StaDa) SearchForName(search string) *StaDa {
+	var stations []Station = nil
 	for _, elem := range s.Stations {
 		if strings.Contains(strings.ToUpper(elem.Name), strings.ToUpper(search)) {
-			res = append(res, elem)
+			stations = append(stations, elem)
 		}
 	}
+	var res StaDa
+	res.Stations = stations
+	res.Total = len(stations)
+	res.Search = search
 	return &res
 }
 

@@ -58,11 +58,9 @@ func SearchHandler(stationsList *apiData.StaDa) http.HandlerFunc {
 
 		var res apiData.StaDa
 		if name == "" {
-			res.Stations = *stationsList.SearchForName(searchQuery)
-			res.Search = searchQuery
+			res = *stationsList.SearchForName(searchQuery)
 		} else {
-			res.Stations = *stationsList.SearchForName(name)
-			res.Search = name
+			res = *stationsList.SearchForName(name)
 		}
 
 		err = tmpl.Execute(w, res)

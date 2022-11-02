@@ -1,23 +1,35 @@
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div>
-    <form method="POST" action="/Search?q={{.Search}}">
-        <label>Name</label><input name="name" type="text" value="{{.Search}}" />
-        <input type="submit" value="submit" />
-    </form>
+<div class="topnav">
+    <a href="http://localhost:8080">
+        <img src="https://assets.static-bahn.de/dam/jcr:47b6ca20-95d9-4102-bc5a-6ebb5634f009/db-logo.svg" alt="Logo" >
+    </a>
+    <div class="search-container">
+        <form method="POST" action="/Search">
+            <input name="name" type="text" placeholder="Search.." />
+            <button type="submit"><i class="fa fa-fw fa-search" style="color: #c1121c"></i></button>
+        </form>
+    </div>
 </div>
-<div>
-    <ul>
+
+<div class="page">
+    <div class="DbStripe"></div>
+    <div class="DbBox" style="margin-top: -7px">
+        <h2 class="DbText">{{.Total}} results found for "{{.Search}}"</h2>
+    </div>
+    <div style="margin-top: 20px">
         {{range .Stations}}
-        <li>
-            <form method="POST" action="/Station?q={{.Num}}">
+        <form method="POST" action="/Station?q={{.Num}}" class="DbList">
             <input name="station" type="submit" value={{.Name}}>
-            </form>
-        </li>
+        </form>
         {{end}}
-    </ul>
+    </div>
+
+
 </div>
 </body>
 </html>
